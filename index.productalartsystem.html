@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ExpiryGuard | Pharmacy Pro</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text-dark: #1e293b;
+            --text-light: #64748b;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+
+        body { background-color: var(--bg); color: var(--text-dark); }
+
+        .hidden { display: none !important; }
+
+        /* LOGIN SCREEN */
+        #login-container {
+            display: flex; justify-content: center; align-items: center;
+            height: 100vh; background: linear-gradient(135deg, #4f46e5 0%, #312e81 100%);
+        }
+
+        .login-card {
+            background: #ffffff; padding: 40px; border-radius: 20px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+            width: 100%; max-width: 400px; text-align: center;
+        }
+
+        .login-box input {
+            width: 100%; padding: 12px; border: 1px solid #cbd5e1;
+            border-radius: 8px; margin: 8px 0 15px 0; font-size: 14px;
+        }
+
+        .btn-login {
+            background: var(--primary); color: white; border: none;
+            padding: 12px; border-radius: 8px; width: 100%; font-weight: 600;
+            cursor: pointer; transition: 0.3s;
+        }
+
+        /* DASHBOARD LAYOUT */
+        header {
+            background: var(--card-bg); padding: 1rem 5%;
+            display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 1px solid #e2e8f0; position: sticky; top: 0; z-index: 100;
+        }
+
+        .container { max-width: 1200px; margin: 2rem auto; padding: 0 20px; }
+
+        .stats-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px; margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--card-bg); padding: 24px; border-radius: 12px;
+            display: flex; align-items: center; gap: 20px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); cursor: pointer; transition: 0.2s;
+        }
+
+        .stat-card:hover { transform: translateY(-3px); }
+
+        .stat-icon {
+            width: 50px; height: 50px; border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.5rem; color: white;
+        }
+
+        .main-layout {
+            display: grid; grid-template-columns: 350px 1fr; gap: 30px;
+        }
+
+        @media (max-width: 900px) { .main-layout { grid-template-columns: 1fr; } }
+
+        .card {
+            background: var(--card-bg); padding: 25px; border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+        }
+
+        /* FORM & TABLE */
+        input, select {
+            width: 100%; padding: 12px; border: 1px solid #cbd5e1;
+            border-radius: 8px; margin: 8px 0 15px 0; font-size: 14px;
+        }
+
+        .btn-primary {
+            background: var(--primary); color: white; border: none;
+            padding: 12px; border-radius: 8px; width: 100%; font-weight: 600;
+            cursor: pointer; transition: 0.3s;
+        }
+
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th { text-align: left; padding: 12px; background: #f8fafc; font-size: 12px; color: var(--text-light); text-transform: uppercase; }
+        td { padding: 12px; border-bottom: 1px solid #f1f5f9; font-size: 14px; }
+
+        .status-badge { padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 700; }
+        .status-valid { background: #ecfdf5; color: #047857; }
+        .status-near { background: #fffbeb; color: #b45309; }
+        .status-expired { background: #fee2e2; color: #b91c1c; }
+
+        .btn-delete { color: var(--danger); background: none; border: none; cursor: pointer; font-size: 1.1rem; }
+
+        .notif-card {
+            background: #ffffff; border-left: 5px solid var(--danger);
+            padding: 15px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="login-container">
+    <div class="login-card">
+        <i class="fas fa-shield-virus" style="font-size: 3rem; color: var(--primary); margin-bottom: 1rem;"></i>
+        <h1>TIMMYTECH PHARMA-SYSTEM</h1>
+        <p style="color: #64748b; margin-bottom: 2rem;">Restricted Access: Inventory Management Portal</p>
+        
+        <div class="login-box">
+            <input type="text" id="username" placeholder="Username">
+            <input type="password" id="password" placeholder="Password">
+            <button class="btn-login" onclick="handleLogin()">LOGIN</button>
+        </div>
+
+        <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #f1f5f9;">
+            <p style="font-size: 11px; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px;">
+                Developed By
+            </p>
+            <p style="font-size: 14px; font-weight: 700; color: var(--primary);">
+                [AJAYI OLUWATIMILEYIN DANIEL]
+            </p>
+            <p style="font-size: 10px; color: #cbd5e1; margin-top: 5px;">
+                © 2026 TimmyTech Systems • v1.0
+            </p>
+        </div>
+    </div>
+</div>
+
+    </div>
+
+    <div id="app-container" class="hidden">
+        <header>
+            <div style="display:flex; align-items:center; gap:10px;">
+                <i class="fas fa-cubes" style="color:var(--primary); font-size:1.5rem;"></i>
+                <h2 style="font-weight: 700; letter-spacing:-1px;">PRODUCTS EXPIRED MANAGEMENT SYSTEM</h2>
+            </div>
+            <button onclick="location.reload()" style="background:none; border:none; color:var(--danger); cursor:pointer; font-weight:600;">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
+        </header>
+
+        <div class="container">
+            <div id="notification-area" style="display:none;">
+                <div class="notif-card">
+                    <div style="color: #991b1b; font-weight: bold; margin-bottom: 5px; font-size: 14px;">
+                        <i class="fas fa-exclamation-triangle"></i> Items Requiring Immediate Removal
+                    </div>
+                    <ul id="notification-list" style="margin-left: 20px; color: var(--danger); font-size: 13px;"></ul>
+                </div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card" onclick="setFilter('VALID')">
+                    <div class="stat-icon" style="background: var(--success);"><i class="fas fa-check-circle"></i></div>
+                    <div><p style="color:var(--text-light); font-size:14px;">Valid Products</p><h2 id="count-valid">0</h2></div>
+                </div>
+                <div class="stat-card" onclick="setFilter('NEAR EXPIRY')">
+                    <div class="stat-icon" style="background: var(--warning);"><i class="fas fa-clock"></i></div>
+                    <div><p style="color:var(--text-light); font-size:14px;">Near Expiry</p><h2 id="count-near">0</h2></div>
+                </div>
+                <div class="stat-card" onclick="setFilter('EXPIRED')">
+                    <div class="stat-icon" style="background: var(--danger);"><i class="fas fa-exclamation-triangle"></i></div>
+                    <div><p style="color:var(--text-light); font-size:14px;">Expired Items</p><h2 id="count-expired">0</h2></div>
+                </div>
+            </div>
+
+            <div class="card" style="margin-bottom: 20px; border-left: 5px solid var(--primary);">
+                <h4 style="font-size: 12px; color: var(--text-light);">SYSTEM STATUS</h4>
+                <p id="activity-log" style="font-size: 13px; font-weight: 600;">System Ready...</p>
+            </div>
+
+            <div class="main-layout">
+                <div class="card" id="add-product-card" style="height: fit-content;">
+                    <h3 style="margin-bottom:1.5rem;"><i class="fas fa-plus-circle"></i> Add New Product</h3>
+                    <label style="font-size: 12px; font-weight: 600;">Product Name</label>
+                    <input type="text" id="pName" placeholder="e.g. Amoxicillin 500mg">
+                    
+                    <label style="font-size: 12px; font-weight: 600;">Product Category</label>
+                  
+                        <select id="pCat" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ddd; margin-bottom: 10px; background-color: white;">
+    <option value="" disabled selected>-- Select Drug Class --</option>
+    <option value="Antibiotics">Antibiotics (e.g. Amoxil)</option>
+    <option value="Analgesics">Analgesics (Painkillers)</option>
+    <option value="Antimalarials">Antimalarials (e.g. Coartem)</option>
+    <option value="Supplements">Supplements & Vitamins</option>
+    <option value="Syrups">Syrups & Liquids</option>
+    <option value="Topicals">Topicals (Creams/Ointments)</option>
+</select>
+                    
+
+                    <label style="font-size: 12px; font-weight: 600;">Expiration Date</label>
+                    <input type="date" id="pDate">
+
+                    <button class="btn-primary" onclick="addProduct()">Add to Inventory</button>
+                </div>
+              
+                <div class="card">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem; flex-wrap: wrap; gap: 10px;">
+                        <h3 style="margin:0;">Inventory List</h3>
+                        <input type="text" id="search" placeholder="Quick search..." style="width:180px; margin:0;" onkeyup="filterTable()">
+                        <button onclick="setFilter('ALL')" style="background:var(--primary); color:white; border:none; padding:8px 12px; border-radius:5px; font-size:12px; cursor:pointer;">
+                            View All Inventory
+                        </button>
+                    </div>
+                    
+                    <div style="overflow-x: auto;">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Product Details</th>
+                                    <th>Expiry Date</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="inventory-body"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCFKhu3IYXTktVadJA_vMbd1bB6J6rB8HQ",
+      authDomain: "timmytech-invenyory.firebaseapp.com",
+      projectId: "timmytech-invenyory",
+      storageBucket: "timmytech-invenyory.firebasestorage.app",
+      messagingSenderId: "928078555024",
+      appId: "1:928078555024:web:77478b7a8a79582e58b515"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const inventoryCol = collection(db, "products");
+
+    let currentFilter = 'ALL'; 
+    let allItems = []; 
+
+    window.handleLogin = function() {
+        const user = document.getElementById('username').value.trim();
+        const pass = document.getElementById('password').value.trim();
+
+        if ((user === "Admin" || user === "Staff") && pass === "1234") {
+            document.getElementById('login-container').classList.add('hidden');
+            document.getElementById('app-container').classList.remove('hidden');
+            
+            const log = document.getElementById('activity-log');
+            if(log) log.innerText = "Authorized as: " + user;
+
+            // Role-based UI restriction
+            const isAdmin = (user === "Admin");
+            const addCard = document.getElementById('add-product-card');
+            if(addCard) addCard.style.display = isAdmin ? 'block' : 'none';
+
+            if (allItems.length > 0) {
+                renderInterface(allItems); 
+            }
+        } else {
+            alert("Invalid Credentials! Use 'Admin' or 'Staff' with password '1234'");
+        }
+    };
+
+    window.addProduct = async function() {
+        const name = document.getElementById('pName').value;
+        const cat = document.getElementById('pCat').value;
+        const date = document.getElementById('pDate').value;
+        if(!name || !date) return alert("Please fill all fields");
+
+        await addDoc(inventoryCol, { name, category: cat, date, timestamp: new Date() });
+        
+        document.getElementById('pName').value = '';
+        document.getElementById('pDate').value = '';
+        
+        const log = document.getElementById('activity-log');
+        log.innerText = "Last Action: Added " + name;
+        log.style.color = "var(--success)";
+    };
+
+    window.deleteItem = async function(id) {
+        if(confirm("Delete this item?")) {
+            await deleteDoc(doc(db, "products", id));
+            const log = document.getElementById('activity-log');
+            log.innerText = "Last Action: Item Removed";
+            log.style.color = "var(--danger)";
+        }
+    };
+
+    onSnapshot(inventoryCol, (snapshot) => {
+        allItems = [];
+        snapshot.forEach(doc => {
+            allItems.push({ id: doc.id, ...doc.data() });
+        });
+        renderInterface(allItems);
+    });
+
+    function renderInterface(data) {
+        const tableBody = document.getElementById('inventory-body');
+        const notifList = document.getElementById('notification-list');
+        const notifArea = document.getElementById('notification-area');
+        
+        let validCount = 0, nearCount = 0, expiredCount = 0;
+        let notifHTML = '';
+        const today = new Date();
+        today.setHours(0,0,0,0);
+
+        data.forEach(item => {
+            const expDate = new Date(item.date);
+            const diffDays = Math.ceil((expDate - today) / (1000 * 60 * 60 * 24));
+            
+            if (diffDays < 0) {
+                expiredCount++;
+                notifHTML += `<li><strong>${item.name}</strong> (Expired on ${item.date})</li>`;
+            } else if (diffDays <= 30) {
+                nearCount++;
+            } else {
+                validCount++;
+            }
+        });
+
+        document.getElementById('count-valid').innerText = validCount;
+        document.getElementById('count-near').innerText = nearCount;
+        document.getElementById('count-expired').innerText = expiredCount;
+
+        const filteredData = data.filter(item => {
+            const expDate = new Date(item.date);
+            const diffDays = Math.ceil((expDate - today) / (1000 * 60 * 60 * 24));
+            if (currentFilter === 'ALL') return true;
+            if (currentFilter === 'EXPIRED') return diffDays < 0;
+            if (currentFilter === 'NEAR EXPIRY') return diffDays >= 0 && diffDays <= 30;
+            if (currentFilter === 'VALID') return diffDays > 30;
+            return true;
+        });
+
+        let tableHTML = '';
+        filteredData.forEach(item => {
+            const expDate = new Date(item.date);
+            const diffDays = Math.ceil((expDate - today) / (1000 * 60 * 60 * 24));
+            
+            let status = 'VALID', statusClass = 'status-valid';
+            if (diffDays < 0) { status = 'EXPIRED'; statusClass = 'status-expired'; }
+            else if (diffDays <= 30) { status = 'NEAR EXPIRY'; statusClass = 'status-near'; }
+
+            const userField = document.getElementById('username');
+            const isAdmin = userField && userField.value === "Admin";
+            const actionContent = isAdmin 
+                ? `<button class="btn-delete" onclick="deleteItem('${item.id}')"><i class="fas fa-trash"></i></button>` 
+                : `<i class="fas fa-lock" style="color:#cbd5e1" title="Admin Only"></i>`;
+
+            tableHTML += `
+                <tr>
+                    <td><strong>${item.name}</strong><br><small style="color:gray">${item.category}</small></td>
+                    <td>${item.date}</td>
+                    <td><span class="status-badge ${statusClass}">${status}</span></td>
+                    <td style="text-align:center">${actionContent}</td>
+                </tr>
+            `;
+        });
+
+        tableBody.innerHTML = tableHTML;
+
+        if(notifHTML !== "") {
+            notifArea.style.display = 'block';
+            notifList.innerHTML = notifHTML;
+        } else {
+            notifArea.style.display = 'none';
+        }
+    }
+
+    window.filterTable = function() {
+        let input = document.getElementById("search").value.toUpperCase();
+        let rows = document.getElementById("inventory-body").getElementsByTagName("tr");
+        for (let i = 0; i < rows.length; i++) {
+            let text = rows[i].innerText.toUpperCase();
+            rows[i].style.display = text.indexOf(input) > -1 ? "" : "none";
+        }
+    };
+
+    window.setFilter = function(status) {
+        currentFilter = status;
+        renderInterface(allItems);
+    };
+</script>
+</body>
+</html>
