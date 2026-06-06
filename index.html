@@ -220,52 +220,55 @@
                 <p id="activity-log" style="font-size: 13px; font-weight: 600;">System Ready...</p>
             </div>
 
-            <div class="main-layout">
-                
-                    <div class="card" id="add-product-card" style="height: fit-content;">
-    <h3 style="margin-bottom:1.5rem;"><i class="fas fa-plus-circle"></i> Add New Product</h3>
-    
-    <div id="success-msg" style="display:none; padding: 10px; background-color: #d4edda; color: #155724; border-radius: 5px; margin-bottom: 10px; text-align: center;">
-        Product added successfully!
+<div class="main-layout">
+    <div class="card" id="add-product-card" style="height: fit-content;">
+        <h3 style="margin-bottom:1.5rem;"><i class="fas fa-plus-circle"></i> Add New Product</h3>
+        
+        <div id="success-msg" style="display:none; padding: 10px; background-color: #d4edda; color: #155724; border-radius: 5px; margin-bottom: 10px; text-align: center;">
+            Product added successfully!
+        </div>
+
+        <label style="font-size: 12px; font-weight: 600;">Product Name</label>
+        <input type="text" id="pName" placeholder="e.g. Amoxicillin 500mg" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ddd; margin-bottom: 10px; box-sizing: border-box;">
+        
+        <label style="font-size: 12px; font-weight: 600;">Product Category</label>
+        <select id="pCat" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ddd; margin-bottom: 10px; background-color: white;">
+            <option value="" disabled selected>-- Select Drug Class --</option>
+            <option value="Antibiotics">Antibiotics (e.g. Amoxil)</option>
+            <option value="Analgesics">Analgesics (Painkillers)</option>
+            <option value="Antimalarials">Antimalarials (e.g. Coartem)</option>
+            <option value="Supplements">Supplements & Vitamins</option>
+            <option value="Syrups">Syrups & Liquids</option>
+            <option value="Topicals">Topicals (Creams/Ointments)</option>
+        </select>
+
+        <label style="font-size: 12px; font-weight: 600;">Expiration Date</label>
+        <input type="date" id="pDate" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ddd; margin-bottom: 15px; box-sizing: border-box;">
+
+        <button class="btn-primary" onclick="addProduct()" style="width: 100%; padding: 12px;">Add to Inventory</button>
+    </div> 
+    <div class="card">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem; flex-wrap: wrap; gap: 10px;">
+            <h3 style="margin:0;">Inventory List</h3>
+            <input type="text" id="search" placeholder="Quick search..." style="width:180px; margin:0;" onkeyup="filterTable()">
+            <button onclick="setFilter('ALL')" style="background:var(--primary); color:white; border:none; padding:8px 12px; border-radius:5px; font-size:12px; cursor:pointer;">
+                View All Inventory
+            </button>
+        </div>
+        
+        <div id="inventory-chart" style="width: 100%; height: 20px; display: flex; border-radius: 10px; overflow: hidden; margin-bottom: 20px;">
+            <div id="chart-expired" style="background: #ef4444; width: 0%; transition: width 1s;"></div>
+            <div id="chart-near" style="background: #f59e0b; width: 0%; transition: width 1s;"></div>
+            <div id="chart-valid" style="background: #10b981; width: 0%; transition: width 1s;"></div>
+        </div>
+        
+        <div style="overflow-x: auto;">
+            <table>
+                </table>
+        </div>
     </div>
-
-    <label style="font-size: 12px; font-weight: 600;">Product Name</label>
-    <input type="text" id="pName" placeholder="e.g. Amoxicillin 500mg">
-    
-    <label style="font-size: 12px; font-weight: 600;">Product Category</label>
-    <select id="pCat" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ddd; margin-bottom: 10px; background-color: white;">
-        <option value="" disabled selected>-- Select Drug Class --</option>
-        <option value="Antibiotics">Antibiotics (e.g. Amoxil)</option>
-        <option value="Analgesics">Analgesics (Painkillers)</option>
-        <option value="Antimalarials">Antimalarials (e.g. Coartem)</option>
-        <option value="Supplements">Supplements & Vitamins</option>
-        <option value="Syrups">Syrups & Liquids</option>
-        <option value="Topicals">Topicals (Creams/Ointments)</option>
-    </select>
-                    </div>
-                
-
-                    <label style="font-size: 12px; font-weight: 600;">Expiration Date</label>
-                    <input type="date" id="pDate">
-
-                    <button class="btn-primary" onclick="addProduct()">Add to Inventory</button>
-                </div>
-              
-                <div class="card">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem; flex-wrap: wrap; gap: 10px;">
-                        <h3 style="margin:0;">Inventory List</h3>
-                        <input type="text" id="search" placeholder="Quick search..." style="width:180px; margin:0;" onkeyup="filterTable()">
-                        <button onclick="setFilter('ALL')" style="background:var(--primary); color:white; border:none; padding:8px 12px; border-radius:5px; font-size:12px; cursor:pointer;">
-                            View All Inventory
-                        </button>
-                    </div>
-                    
-                    <div style="overflow-x: auto;">
-                      <div id="inventory-chart" style="width: 100%; height: 20px; display: flex; border-radius: 10px; overflow: hidden; margin-bottom: 20px;">
-    <div id="chart-expired" style="background: #ef4444; width: 0%; transition: width 1s;"></div>
-    <div id="chart-near" style="background: #f59e0b; width: 0%; transition: width 1s;"></div>
-    <div id="chart-valid" style="background: #10b981; width: 0%; transition: width 1s;"></div>
 </div>
+            
 
 <div style="overflow-x: auto;">
     <table>
