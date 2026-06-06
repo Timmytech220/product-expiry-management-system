@@ -308,7 +308,10 @@
     <span id="alert-message"></span>
     </div>
     
-    
+    <div id="custom-alert" style="display:none; position:fixed; top:20px; right:20px; background:#ef4444; color:white; padding:15px; border-radius:8px; z-index:9999; box-shadow:0 4px 6px rgba(0,0,0,0.1);">
+    <span id="alert-message"></span>
+    </div>
+            
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
@@ -610,6 +613,23 @@ document.getElementById('confirmDeleteBtn').onclick = async function() {
     }, 3000);
 };
     
+    function showCustomAlert(message) {
+    const alertBox = document.getElementById('custom-alert');
+    const alertMsg = document.getElementById('alert-message');
+    
+    // Check if elements exist before trying to use them
+    if(alertBox && alertMsg) {
+        alertMsg.innerText = message;
+        alertBox.style.display = 'block';
+        
+        // Hide it automatically after 3 seconds
+        setTimeout(() => { 
+            alertBox.style.display = 'none'; 
+        }, 3000);
+    } else {
+        console.error("Alert elements not found in HTML!");
+    }
+    }
     
 </script>
 </body>
