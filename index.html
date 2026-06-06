@@ -261,6 +261,17 @@
                     </div>
                     
                     <div style="overflow-x: auto;">
+                      <div id="inventory-chart" style="width: 100%; height: 20px; display: flex; border-radius: 10px; overflow: hidden; margin-bottom: 20px;">
+    <div id="chart-expired" style="background: #ef4444; width: 0%; transition: width 1s;"></div>
+    <div id="chart-near" style="background: #f59e0b; width: 0%; transition: width 1s;"></div>
+    <div id="chart-valid" style="background: #10b981; width: 0%; transition: width 1s;"></div>
+</div>
+
+<div style="overflow-x: auto;">
+    <table>
+        <thead>
+            ...
+            
                         <table>
                             <thead>
                                 <tr>
@@ -420,20 +431,31 @@ onSnapshot(inventoryCol, (snapshot) => {
 
 function renderInterface(data) {
     const tableBody = document.getElementById('inventory-body');
+    const notifList = document.getElementById('notification-list');
+    const notifArea = document.getElementById('notification-area');
+    
+    if (!tableBody) return; 
+
     const today = new Date();
     today.setHours(0, 0, 0, 0);
+
+    // Ensure filter exists
+    if (typeof currentFilter === 'undefined') window.currentFilter = 'ALL';
 
     // 1. AUTO-SORTING: Sort items by date (earliest/expired first)
     data.sort((a, b) => new Date(a.date) - new Date(b.date));
 
     let validCount = 0, nearCount = 0, expiredCount = 0;
+    let notifHTML = ''; 
 
     data.forEach(item => {
         const expDate = new Date(item.date);
         const diffDays = Math.ceil((expDate - today) / (1000 * 60 * 60 * 24));
         
+        // Build notification for expired items
         if (diffDays < 0) {
             expiredCount++;
+            notifHTML += `<li><strong>${item.name}</strong> (Expired on ${item.date})</li>`;
         } else if (diffDays <= 30) {
             nearCount++;
         } else {
@@ -441,11 +463,22 @@ function renderInterface(data) {
         }
     });
 
-    document.getElementById('count-valid').innerText = validCount;
-    document.getElementById('count-near').innerText = nearCount;
-    document.getElementById('count-expired').innerText = expiredCount;
+    // Update UI counters
+    if (document.getElementById('count-valid')) document.getElementById('count-valid').innerText = validCount;
+    if (document.getElementById('count-near')) document.getElementById('count-near').innerText = nearCount;
+    if (document.getElementById('count-expired')) document.getElementById('count-expired').innerText = expiredCount;
 
-    // Filtering logic
+    // Show/Hide Notification Bar
+    if (notifArea && notifList) {
+        if (notifHTML !== "") {
+            notifArea.style.display = 'block';
+            notifList.innerHTML = notifHTML;
+        } else {
+            notifArea.style.display = 'none';
+        }
+    }
+
+    // 2. FILTERING
     const filteredData = data.filter(item => {
         const expDate = new Date(item.date);
         const diffDays = Math.ceil((expDate - today) / (1000 * 60 * 60 * 24));
@@ -456,22 +489,24 @@ function renderInterface(data) {
         return true;
     });
 
+    // 3. GENERATE TABLE (WITH COLOR-CODING)
     let tableHTML = '';
     filteredData.forEach(item => {
         const expDate = new Date(item.date);
         const diffDays = Math.ceil((expDate - today) / (1000 * 60 * 60 * 24));
         
-        // 2. COLOR-CODING LOGIC
         let status = 'VALID', statusClass = 'status-valid', rowColor = '';
         if (diffDays < 0) { 
-            status = 'EXPIRED'; 
-            statusClass = 'status-expired'; 
-            rowColor = 'background-color: #fff5f5;'; 
+            status = 'EXPIRED'; statusClass = 'status-expired'; rowColor = 'background-color: #fff5f5;'; 
         } else if (diffDays <= 30) { 
-            status = 'NEAR EXPIRY'; 
-            statusClass = 'status-near'; 
-            rowColor = 'background-color: #fffdf0;'; 
+            status = 'NEAR EXPIRY'; statusClass = 'status-near'; rowColor = 'background-color: #fffdf0;'; 
         }
+
+        // 4. CHART CALCULATION (Add this to feed your progress bars)
+        const total = validCount + nearCount + expiredCount || 1;
+        if(document.getElementById('chart-expired')) document.getElementById('chart-expired').style.width = (expiredCount / total * 100) + '%';
+        if(document.getElementById('chart-near')) document.getElementById('chart-near').style.width = (nearCount / total * 100) + '%';
+        if(document.getElementById('chart-valid')) document.getElementById('chart-valid').style.width = (validCount / total * 100) + '%';
 
         const userField = document.getElementById('username');
         const isAdmin = userField && userField.value === "Admin";
@@ -491,7 +526,7 @@ function renderInterface(data) {
 
     tableBody.innerHTML = tableHTML;
     }
-        
+    
 
 
     window.filterTable = function() {
