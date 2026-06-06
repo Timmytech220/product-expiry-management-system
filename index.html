@@ -312,24 +312,42 @@ do<!DOCTYPE html>
 };
     
 
-    Window.deleteItem = async function(id) {
-    // Custom message here
-    if(confirm("Are you sure you want to permanently remove this product from the inventory?")) {
-        await deleteDoc(doc(db, "products", id));
-        const log = document.getElementById('activity-log');
-        log.innerText = "Last Action: Item Removed";
-        log.style.color = "var(--danger)";
+    // Corrected Delete Function
+window.deleteItem = async function(id) {
+    if (!id) {
+        console.error("Delete failed: No ID provided!");
+        return;
+    }
+
+    if (confirm("Are you sure you want to permanently remove this product from the inventory?")) {
+        try {
+            // Deletes the document from your Firestore collection
+            await deleteDoc(doc(db, "products", id));
+            
+            // Updates the UI log
+            const log = document.getElementById('activity-log');
+            if (log) {
+                log.innerText = "Last Action: Item Removed";
+                log.style.color = "var(--danger)";
+            }
+            console.log("Successfully deleted item:", id);
+        } catch (error) {
+            console.error("Firebase Delete Error:", error);
+            alert("Delete failed! Check the browser console for details.");
+        }
     }
 };
-            
 
-    onSnapshot(inventoryCol, (snapshot) => {
-        allItems = [];
-        snapshot.forEach(doc => {
-            allItems.push({ id: doc.id, ...doc.data() });
-        });
-        renderInterface(allItems);
+// Original Snapshot Listener (Do not remove this!)
+onSnapshot(inventoryCol, (snapshot) => {
+    allItems = [];
+    snapshot.forEach(doc => {
+        allItems.push({ id: doc.id, ...doc.data() });
     });
+    // This function automatically refreshes your interface whenever data changes
+    renderInterface(allItems);
+});
+    
 
     function renderInterface(data) {
         const tableBody = document.getElementById('inventory-body');
