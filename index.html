@@ -610,23 +610,6 @@ document.getElementById('confirmDeleteBtn').onclick = async function() {
     }, 3000);
 };
     
-    function showCustomAlert(message) {
-    const alertBox = document.getElementById('custom-alert');
-    const alertMsg = document.getElementById('alert-message');
-    
-    // Check if elements exist before trying to use them
-    if(alertBox && alertMsg) {
-        alertMsg.innerText = message;
-        alertBox.style.display = 'block';
-        
-        // Hide it automatically after 3 seconds
-        setTimeout(() => { 
-            alertBox.style.display = 'none'; 
-        }, 3000);
-    } else {
-        console.error("Alert elements not found in HTML!");
-    }
-    }
     
 </script>
 </body>
