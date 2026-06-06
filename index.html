@@ -289,6 +289,11 @@
         </div>
     </div>
     </div>
+
+    <div id="custom-alert" style="display:none; position:fixed; top:20px; right:20px; background:white; padding:15px 25px; border-radius:10px; box-shadow:0 4px 15px rgba(0,0,0,0.2); border-left:5px solid var(--danger); z-index:2000;">
+    <span id="alert-message"></span>
+    </div>
+    
     
 
 <script type="module">
@@ -335,26 +340,46 @@
         }
     };
 
+
     window.addProduct = async function() {
-    const name = document.getElementById('pName').value;
+    const name = document.getElementById('pName').value.trim();
     const cat = document.getElementById('pCat').value;
     const date = document.getElementById('pDate').value;
     
-    if(!name || !date) return alert("Please fill all fields");
+    // NEW: Using your custom notification instead of the old alert
+    if (!name || !date) {
+        showNotification("Please fill all required fields!");
+        return;
+    }
 
-    await addDoc(inventoryCol, { name, category: cat, date, timestamp: new Date() });
-    
-    document.getElementById('pName').value = '';
-    document.getElementById('pDate').value = '';
-    
-    const log = document.getElementById('activity-log');
-    log.innerText = "Last Action: Added " + name;
-    log.style.color = "var(--success)";
-    
-    // This triggers the success message you added in the HTML
-    showSuccessMessage();
+    try {
+        await addDoc(inventoryCol, { 
+            name, 
+            category: cat, 
+            date, 
+            timestamp: new Date() 
+        });
+        
+        // Clear fields
+        document.getElementById('pName').value = '';
+        document.getElementById('pDate').value = '';
+        
+        // Update Log
+        const log = document.getElementById('activity-log');
+        if (log) {
+            log.innerText = "Last Action: Added " + name;
+            log.style.color = "var(--success)";
+        }
+        
+        // Success feedback
+        showSuccessMessage();
+        
+    } catch (error) {
+        console.error("Error adding product:", error);
+        showNotification("Failed to add product. Please try again.");
+    }
 };
-    
+        
 
     // Corrected Delete Function
 window.deleteItem = async function(id) {
@@ -511,6 +536,19 @@ document.getElementById('confirmDeleteBtn').onclick = async function() {
         // Optional: Trigger your success log here
     }
 };
+    window.showNotification = function(message) {
+    const alertBox = document.getElementById('custom-alert');
+    const alertMsg = document.getElementById('alert-message');
+    
+    alertMsg.innerText = message;
+    alertBox.style.display = 'block';
+    
+    // Automatically hide after 3 seconds
+    setTimeout(() => {
+        alertBox.style.display = 'none';
+    }, 3000);
+};
+    
     
 </script>
 </body>
