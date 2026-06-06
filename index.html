@@ -330,30 +330,50 @@
     let currentFilter = 'ALL'; 
     let allItems = []; 
 
-    window.handleLogin = function() {
-        const user = document.getElementById('username').value.trim();
-        const pass = document.getElementById('password').value.trim();
 
-        if ((user === "Admin" || user === "Staff") && pass === "1234") {
-            document.getElementById('login-container').classList.add('hidden');
-            document.getElementById('app-container').classList.remove('hidden');
-            
-            const log = document.getElementById('activity-log');
-            if(log) log.innerText = "Authorized as: " + user;
+window.handleLogin = function() {
+    const user = document.getElementById('username').value.trim();
+    const pass = document.getElementById('password').value.trim();
 
-            // Role-based UI restriction
-            const isAdmin = (user === "Admin");
-            const addCard = document.getElementById('add-product-card');
-            if(addCard) addCard.style.display = isAdmin ? 'block' : 'none';
+    // 1. Validate Credentials
+    if ((user === "Admin" || user === "Staff") && pass === "1234") {
+        
+        // 2. Store Session Securely (Persistence)
+        localStorage.setItem('user', JSON.stringify({ username: user, role: user }));
+        
+        // 3. Smooth UI Transition
+        document.getElementById('login-container').classList.add('hidden');
+        document.getElementById('app-container').classList.remove('hidden');
+        
+        const log = document.getElementById('activity-log');
+        if(log) log.innerText = "Authorized as: " + user;
 
-            if (allItems.length > 0) {
-                renderInterface(allItems); 
-            }
-        } else {
-            alert("Invalid Credentials! Use 'Admin' or 'Staff' with password '1234'");
+        // 4. Role-based UI restriction
+        const isAdmin = (user === "Admin");
+        const addCard = document.getElementById('add-product-card');
+        if(addCard) addCard.style.display = isAdmin ? 'block' : 'none';
+
+        // Trigger Interface
+        if (typeof allItems !== 'undefined' && allItems.length > 0) {
+            renderInterface(allItems); 
         }
-    };
+    } else {
+        // 5. Professional UI Feedback instead of Alert
+        showCustomAlert("Invalid credentials. Please try again.");
+    }
+};
 
+// Helper for professional feedback
+function showCustomAlert(message) {
+    const alertBox = document.getElementById('custom-alert');
+    const alertMsg = document.getElementById('alert-message');
+    if(alertBox && alertMsg) {
+        alertMsg.innerText = message;
+        alertBox.style.display = 'block';
+        setTimeout(() => { alertBox.style.display = 'none'; }, 3000);
+    }
+    }
+    
 
     window.addProduct = async function() {
     const name = document.getElementById('pName').value.trim();
