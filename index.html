@@ -418,34 +418,80 @@ onSnapshot(inventoryCol, (snapshot) => {
 });
     
 
-    function renderInterface(data) {
-        const tableBody = document.getElementById('inventory-body');
-        const notifList = document.getElementById('notification-list');
-        const notifArea = document.getElementById('notification-area');
+function renderInterface(data) {
+    const tableBody = document.getElementById('inventory-body');
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    // 1. AUTO-SORTING: Sort items by date (earliest/expired first)
+    data.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+    let validCount = 0, nearCount = 0, expiredCount = 0;
+
+    data.forEach(item => {
+        const expDate = new Date(item.date);
+        const diffDays = Math.ceil((expDate - today) / (1000 * 60 * 60 * 24));
         
-        let validCount = 0, nearCount = 0, expiredCount = 0;
-        let notifHTML = '';
-        const today = new Date();
-        today.setHours(0,0,0,0);
+        if (diffDays < 0) {
+            expiredCount++;
+        } else if (diffDays <= 30) {
+            nearCount++;
+        } else {
+            validCount++;
+        }
+    });
 
-        data.forEach(item => {
-            const expDate = new Date(item.date);
-            const diffDays = Math.ceil((expDate - today) / (1000 * 60 * 60 * 24));
-            
-            if (diffDays < 0) {
-                expiredCount++;
-                notifHTML += `<li><strong>${item.name}</strong> (Expired on ${item.date})</li>`;
-            } else if (diffDays <= 30) {
-                nearCount++;
-            } else {
-                validCount++;
-            }
-        });
+    document.getElementById('count-valid').innerText = validCount;
+    document.getElementById('count-near').innerText = nearCount;
+    document.getElementById('count-expired').innerText = expiredCount;
 
-        document.getElementById('count-valid').innerText = validCount;
-        document.getElementById('count-near').innerText = nearCount;
-        document.getElementById('count-expired').innerText = expiredCount;
+    // Filtering logic
+    const filteredData = data.filter(item => {
+        const expDate = new Date(item.date);
+        const diffDays = Math.ceil((expDate - today) / (1000 * 60 * 60 * 24));
+        if (currentFilter === 'ALL') return true;
+        if (currentFilter === 'EXPIRED') return diffDays < 0;
+        if (currentFilter === 'NEAR EXPIRY') return diffDays >= 0 && diffDays <= 30;
+        if (currentFilter === 'VALID') return diffDays > 30;
+        return true;
+    });
 
+    let tableHTML = '';
+    filteredData.forEach(item => {
+        const expDate = new Date(item.date);
+        const diffDays = Math.ceil((expDate - today) / (1000 * 60 * 60 * 24));
+        
+        // 2. COLOR-CODING LOGIC
+        let status = 'VALID', statusClass = 'status-valid', rowColor = '';
+        if (diffDays < 0) { 
+            status = 'EXPIRED'; 
+            statusClass = 'status-expired'; 
+            rowColor = 'background-color: #fff5f5;'; 
+        } else if (diffDays <= 30) { 
+            status = 'NEAR EXPIRY'; 
+            statusClass = 'status-near'; 
+            rowColor = 'background-color: #fffdf0;'; 
+        }
+
+        const userField = document.getElementById('username');
+        const isAdmin = userField && userField.value === "Admin";
+        const actionContent = isAdmin 
+            ? `<button class="btn-delete" onclick="deleteItem('${item.id}')"><i class="fas fa-trash"></i></button>` 
+            : `<i class="fas fa-lock" style="color:#cbd5e1" title="Admin Only"></i>`;
+
+        tableHTML += `
+            <tr style="${rowColor}">
+                <td><strong>${item.name}</strong><br><small style="color:gray">${item.category}</small></td>
+                <td>${item.date}</td>
+                <td><span class="status-badge ${statusClass}">${status}</span></td>
+                <td style="text-align:center">${actionContent}</td>
+            </tr>
+        `;
+    });
+
+    tableBody.innerHTML = tableHTML;
+    }
+        
         const filteredData = data.filter(item => {
             const expDate = new Date(item.date);
             const diffDays = Math.ceil((expDate - today) / (1000 * 60 * 60 * 24));
