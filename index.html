@@ -642,8 +642,16 @@ if (notifArea && notifList && nearExpiryList) {
         const userField = document.getElementById('username');
         const isAdmin = userField && userField.value === "Admin";
         const actionContent = isAdmin 
-            ? `<button class="btn-delete" onclick="deleteItem('${item.id}')"><i class="fas fa-trash"></i></button>` 
-            : `<i class="fas fa-lock" style="color:#cbd5e1" title="Admin Only"></i>`;
+    ? `
+        <button class="btn-edit" onclick="openEditModal('${item.id}')" title="Edit Product">
+            <i class="fas fa-edit"></i>
+        </button>
+
+        <button class="btn-delete" onclick="deleteItem('${item.id}')" title="Delete Product">
+            <i class="fas fa-trash"></i>
+        </button>
+      `
+    : `<i class="fas fa-lock" style="color:#cbd5e1" title="Admin Only"></i>`;
 
         tableHTML += `
             <tr style="${rowColor}">
