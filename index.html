@@ -518,8 +518,9 @@ let nearExpiryHTML = "";
             expiredCount++;
             notifHTML += `<li><strong>${item.name}</strong> (Expired on ${item.date})</li>`;
         } else if (diffDays <= 30) {
-            nearCount++;
-        } else {
+    nearCount++;
+    nearExpiryHTML += `<li><strong>${item.name}</strong> (Expires on ${item.date})</li>`;
+} else {
             validCount++;
         }
     });
