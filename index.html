@@ -506,7 +506,32 @@ function showCustomAlert(message) {
         showNotification("Failed to add product. Please try again.");
     }
 };
-        
+
+
+
+    let editId = null;
+
+window.openEditModal = function(id) {
+    const item = allItems.find(product => product.id === id);
+
+    if (!item) {
+        showNotification("Product not found.");
+        return;
+    }
+
+    editId = id;
+
+    document.getElementById('editName').value = item.name;
+    document.getElementById('editCategory').value = item.category;
+    document.getElementById('editDate').value = item.date;
+
+    document.getElementById('editModal').style.display = 'flex';
+};
+
+window.closeEditModal = function() {
+    document.getElementById('editModal').style.display = 'none';
+    editId = null;
+};
 
     // Corrected Delete Function
 window.deleteItem = async function(id) {
