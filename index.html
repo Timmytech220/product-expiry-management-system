@@ -491,9 +491,9 @@ onSnapshot(inventoryCol, (snapshot) => {
 
 function renderInterface(data) {
     const tableBody = document.getElementById('inventory-body');
-    const notifList = document.getElementById('notification-list');
-    const notifArea = document.getElementById('notification-area');
-    
+const notifList = document.getElementById('notification-list');
+const notifArea = document.getElementById('notification-area');
+const nearExpiryList = document.getElementById('near-expiry-list');
     if (!tableBody) return; 
 
     const today = new Date();
