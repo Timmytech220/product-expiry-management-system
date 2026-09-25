@@ -260,17 +260,36 @@
 
 <div class="main-layout">
     <div class="card" id="add-product-card" style="height: fit-content;">
-        <h3 style="margin-bottom:1.5rem;"><i class="fas fa-plus-circle"></i> Add New Product</h3>
-        
-        <div id="success-msg" style="display:none; padding: 10px; background-color: #d4edda; color: #155724; border-radius: 5px; margin-bottom: 10px; text-align: center;">
-            Product added successfully!
-        </div>
+    <h3 style="margin-bottom: 1.5rem;">
+        <i class="fas fa-plus-circle"></i> Add New Product
+    </h3>
 
-        <label style="font-size: 12px; font-weight: 600;">Product Name</label>
-        <input type="text" id="pName" placeholder="e.g. Amoxicillin 500mg" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ddd; margin-bottom: 10px; box-sizing: border-box;">
-        
-        <label style="font-size: 12px; font-weight: 600;">Product Category</label>
-        <select id="pCat" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ddd; margin-bottom: 10px; background-color: white;">
+    <div id="success-msg" style="display:none; padding: 10px; background-color: #d4edda; color: #155724; border-radius: 5px; margin-bottom: 15px; text-align: center;">
+        Product added successfully!
+    </div>
+
+    <div style="margin-bottom: 16px;">
+        <label for="pName" style="display:block; font-size:12px; font-weight:600; margin-bottom:6px;">
+            Product Name
+        </label>
+
+        <input 
+            type="text" 
+            id="pName" 
+            placeholder="e.g. Amoxicillin 500mg"
+            style="width:100%; padding:12px; border-radius:8px; border:1px solid #ddd; box-sizing:border-box;"
+        >
+    </div>
+
+    <div style="margin-bottom: 16px;">
+        <label for="pCat" style="display:block; font-size:12px; font-weight:600; margin-bottom:6px;">
+            Product Category
+        </label>
+
+        <select 
+            id="pCat"
+            style="width:100%; padding:12px; border-radius:8px; border:1px solid #ddd; background-color:white; box-sizing:border-box;"
+        >
             <option value="" disabled selected>-- Select Drug Class --</option>
             <option value="Antibiotics">Antibiotics (e.g. Amoxil)</option>
             <option value="Analgesics">Analgesics (Painkillers)</option>
@@ -279,12 +298,28 @@
             <option value="Syrups">Syrups & Liquids</option>
             <option value="Topicals">Topicals (Creams/Ointments)</option>
         </select>
+    </div>
 
-        <label style="font-size: 12px; font-weight: 600;">Expiration Date</label>
-        <input type="date" id="pDate" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ddd; margin-bottom: 15px; box-sizing: border-box;">
+    <div style="margin-bottom: 18px;">
+        <label for="pDate" style="display:block; font-size:12px; font-weight:600; margin-bottom:6px;">
+            Expiration Date
+        </label>
 
-        <button class="btn-primary" onclick="addProduct()" style="width: 100%; padding: 12px;">Add to Inventory</button>
-    </div> 
+        <input 
+            type="date" 
+            id="pDate"
+            style="width:100%; padding:12px; border-radius:8px; border:1px solid #ddd; box-sizing:border-box;"
+        >
+    </div>
+
+    <button 
+        class="btn-primary" 
+        onclick="addProduct()" 
+        style="width:100%; padding:12px;"
+    >
+        <i class="fas fa-plus"></i> Add to Inventory
+    </button>
+    </div>
     <div class="card">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem; flex-wrap: wrap; gap: 10px;">
             <h3 style="margin:0;">Inventory List</h3>
