@@ -506,7 +506,8 @@ const nearExpiryList = document.getElementById('near-expiry-list');
     data.sort((a, b) => new Date(a.date) - new Date(b.date));
 
     let validCount = 0, nearCount = 0, expiredCount = 0;
-    let notifHTML = ''; 
+let notifHTML = "";
+let nearExpiryHTML = "";
 
     data.forEach(item => {
         const expDate = new Date(item.date);
