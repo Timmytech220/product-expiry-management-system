@@ -531,13 +531,15 @@ let nearExpiryHTML = "";
     if (document.getElementById('count-expired')) document.getElementById('count-expired').innerText = expiredCount;
 
     // Show/Hide Notification Bar
-    if (notifArea && notifList) {
-        if (notifHTML !== "") {
-            notifArea.style.display = 'block';
-            notifList.innerHTML = notifHTML;
-        } else {
-            notifArea.style.display = 'none';
-        }
+if (notifArea && notifList && nearExpiryList) {
+    if (notifHTML !== "" || nearExpiryHTML !== "") {
+        notifArea.style.display = 'block';
+        
+        notifList.innerHTML = notifHTML;
+        nearExpiryList.innerHTML = nearExpiryHTML;
+    } else {
+        notifArea.style.display = 'none';
+    }
     }
 
     // 2. FILTERING
