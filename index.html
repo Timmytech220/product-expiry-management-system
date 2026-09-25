@@ -532,6 +532,45 @@ window.closeEditModal = function() {
     editId = null;
 };
 
+
+    document.getElementById('saveEditBtn').onclick = async function() {
+    if (!editId) {
+        showNotification("No product selected.");
+        return;
+    }
+
+    const name = document.getElementById('editName').value.trim();
+    const category = document.getElementById('editCategory').value;
+    const date = document.getElementById('editDate').value;
+
+    if (!name || !date) {
+        showNotification("Please fill all required fields.");
+        return;
+    }
+
+    try {
+        await updateDoc(doc(db, "products", editId), {
+            name: name,
+            category: category,
+            date: date
+        });
+
+        document.getElementById('editModal').style.display = 'none';
+        editId = null;
+
+        const log = document.getElementById('activity-log');
+        if (log) {
+            log.innerText = "Last Action: Updated " + name;
+            log.style.color = "var(--success)";
+        }
+
+        showSuccessMessage();
+
+    } catch (error) {
+        console.error("Firebase Update Error:", error);
+        showNotification("Failed to update product. Please try again.");
+    }
+};
     // Corrected Delete Function
 window.deleteItem = async function(id) {
     if (!id) {
