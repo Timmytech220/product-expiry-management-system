@@ -348,6 +348,43 @@
         </div>
     </div>
 
+    <!-- EDIT PRODUCT MODAL -->
+<div id="editModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:1000; justify-content:center; align-items:center;">
+    <div style="background:white; padding:25px; border-radius:15px; width:90%; max-width:400px; box-shadow:0 4px 15px rgba(0,0,0,0.2);">
+        
+        <h3 style="margin-top:0; margin-bottom:20px;">
+            <i class="fas fa-edit"></i> Edit Product
+        </h3>
+
+        <label style="font-size:12px; font-weight:600;">Product Name</label>
+        <input type="text" id="editName" placeholder="Product Name">
+
+        <label style="font-size:12px; font-weight:600;">Product Category</label>
+        <select id="editCategory">
+            <option value="Antibiotics">Antibiotics</option>
+            <option value="Analgesics">Analgesics (Painkillers)</option>
+            <option value="Antimalarials">Antimalarials (e.g. Coartem)</option>
+            <option value="Supplements">Supplements & Vitamins</option>
+            <option value="Syrups">Syrups & Liquids</option>
+            <option value="Topicals">Topicals (Creams/Ointments)</option>
+        </select>
+
+        <label style="font-size:12px; font-weight:600;">Expiration Date</label>
+        <input type="date" id="editDate">
+
+        <div style="display:flex; gap:10px; justify-content:flex-end; margin-top:10px;">
+            <button onclick="closeEditModal()" style="padding:10px 20px; border:none; border-radius:5px; background:#e2e8f0; cursor:pointer;">
+                Cancel
+            </button>
+
+            <button id="saveEditBtn" style="padding:10px 20px; border:none; border-radius:5px; background:var(--primary); color:white; cursor:pointer;">
+                Save Changes
+            </button>
+        </div>
+
+    </div>
+</div>
+
 
     <div id="deleteModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:1000; justify-content:center; align-items:center;">
     <div style="background:white; padding:25px; border-radius:15px; width:90%; max-width:400px; text-align:center; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
