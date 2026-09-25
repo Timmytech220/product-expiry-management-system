@@ -170,7 +170,72 @@
 #inventory-body tr:nth-child(4) { animation-delay: 0.4s; }
 #inventory-body tr:nth-child(5) { animation-delay: 0.5s; }
 /* Add more delay rules if you expect longer lists */
-        
+
+
+
+        /* ================================
+   PROFESSIONAL TABLE DESIGN
+   ================================ */
+
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: #ffffff;
+}
+
+table thead th {
+    background: #f8fafc;
+    color: #64748b;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    padding: 14px 16px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+table tbody tr {
+    background: #ffffff !important;
+    transition: background-color 0.2s ease;
+}
+
+table tbody tr:hover {
+    background-color: #f8fafc !important;
+}
+
+table tbody td {
+    padding: 15px 16px;
+    border-bottom: 1px solid #f1f5f9;
+    color: #1e293b;
+}
+
+/* Status Pills */
+
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.status-expired {
+    background: #fee2e2;
+    color: #b91c1c;
+}
+
+.status-near {
+    background: #fef3c7;
+    color: #b45309;
+}
+
+.status-valid {
+    background: #d1fae5;
+    color: #047857;
+}
     </style>
 </head>
 <body>
