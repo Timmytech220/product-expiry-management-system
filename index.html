@@ -214,14 +214,28 @@
         </header>
 
         <div class="container">
-            <div id="notification-area" style="display:none;">
-                <div class="notif-card">
-                    <div style="color: #991b1b; font-weight: bold; margin-bottom: 5px; font-size: 14px;">
-                        <i class="fas fa-exclamation-triangle"></i> Items Requiring Immediate Removal
-                    </div>
-                    <ul id="notification-list" style="margin-left: 20px; color: var(--danger); font-size: 13px;"></ul>
-                </div>
+           <!-- NOTIFICATION AREA -->
+<div id="notification-area" style="display: none;">
+    <div class="notif-wrapper">
+
+        <!-- EXPIRED PRODUCTS -->
+        <div class="notif-card">
+            <div style="color: #991b1b; font-weight: bold; margin-bottom: 5px; font-size: 14px;">
+                <i class="fas fa-exclamation-triangle"></i> Items Requiring Immediate Removal
             </div>
+            <ul id="notification-list" style="margin-left: 20px; color: var(--danger); font-size: 13px;"></ul>
+        </div>
+
+        <!-- NEAR EXPIRY PRODUCTS -->
+        <div class="near-expiry-card" id="near-expiry-area">
+            <div style="color: #b45309; font-weight: bold; margin-bottom: 5px; font-size: 14px;">
+                <i class="fas fa-clock"></i> Nearby Expiry
+            </div>
+            <ul id="near-expiry-list" style="margin-left: 20px; color: #b45309; font-size: 13px;"></ul>
+        </div>
+
+    </div>
+</div>
 
             <div class="stats-grid">
                 <div class="stat-card" onclick="setFilter('VALID')">
