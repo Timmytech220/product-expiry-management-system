@@ -906,7 +906,37 @@ document.getElementById('confirmDeleteBtn').onclick = async function() {
         alertBox.style.display = 'none';
     }, 3000);
 };
-    
+
+
+
+    // Restore saved login session after page refresh
+window.addEventListener('DOMContentLoaded', function() {
+    const savedUser = localStorage.getItem('user');
+
+    if (savedUser) {
+        const userData = JSON.parse(savedUser);
+        const user = userData.username;
+
+        document.getElementById('login-container').classList.add('hidden');
+        document.getElementById('app-container').classList.remove('hidden');
+
+        const log = document.getElementById('activity-log');
+        if (log) {
+            log.innerText = "Authorized as: " + user;
+        }
+
+        const isAdmin = (user === "Admin");
+        const addCard = document.getElementById('add-product-card');
+
+        if (addCard) {
+            addCard.style.display = isAdmin ? 'block' : 'none';
+        }
+
+        if (typeof allItems !== 'undefined' && allItems.length > 0) {
+            renderInterface(allItems);
+        }
+    }
+});
     
 </script>
 </body>
